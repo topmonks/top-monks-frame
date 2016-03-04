@@ -2,20 +2,24 @@
     (:require [re-frame.core :as re-frame]))
 
 (defn atom-input [value]
-  [:input {:type "text"
+  [:div.ui.input
+   [:input {:type "text"
            :value @value
-           :on-change #(re-frame/dispatch [:inp-changed (-> % .-target .-value)])}])
+           :on-change #(re-frame/dispatch [:inp-changed (-> % .-target .-value)])}] ])
 
-(defn shared-state []
+(defn what-we-say []
   (let [text (re-frame/subscribe [:text])]
     (fn []
       [:div
-       [:p "The value is now: " (str @text " is the best")]
-       [:p "Change it here: " [atom-input text]]])))
+       [:h1.ui.header (str @text " is the best")]
+       [atom-input text]
+       [:div.ui.label "I say"]])))
 
 (defn main-panel []
   (let [name (re-frame/subscribe [:name])]
     (fn []
       [:div
-       [:div "Hello from " @name]
-       [shared-state]])))
+       [:header.ui.conainer
+        {:style {:margin "3rem 0"}}
+        [:h1.ui.header @name]]
+       [:main.ui.container [what-we-say]]])))
